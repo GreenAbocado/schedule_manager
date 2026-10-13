@@ -17,7 +17,7 @@ public class ErrorBody {
         this.message = message;
     }
 
-    public static ErrorBody by(ErrorCode error) {
+    public static ErrorBody from(ErrorCode error) {
         return new ErrorBody(error.getCode(), error.getMessage());
     }
 }

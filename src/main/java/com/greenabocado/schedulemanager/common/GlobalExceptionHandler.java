@@ -18,23 +18,23 @@ public class GlobalExceptionHandler {
             IllegalArgumentException.class   // 이후 검증 로직에서 따로 던질 예외
     })
     protected ApiResponse<Void> handleInputException(Exception e) {
-        return ApiResponse.fail(ErrorBody.by(INVALID_INPUT));
+        return ApiResponse.fail(ErrorBody.from(INVALID_INPUT));
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
     protected ApiResponse<Void> handleNoResourceFoundException(NoResourceFoundException e) {
-        return ApiResponse.fail(ErrorBody.by(URL_NOT_FOUND));
+        return ApiResponse.fail(ErrorBody.from(URL_NOT_FOUND));
     }
 
     @ExceptionHandler(CustomException.class)
     protected ApiResponse<Void> handleCustomException(CustomException e) {
-        return ApiResponse.fail(ErrorBody.by(e.getError()));
+        return ApiResponse.fail(ErrorBody.from(e.getError()));
     }
 
     /* 이후 클라이언트 예외 발견 시 추가 필요 */
 
     @ExceptionHandler(Exception.class)
     protected ApiResponse<Void> handleException(Exception e) {
-        return ApiResponse.fail(ErrorBody.by(SERVER_ERROR));
+        return ApiResponse.fail(ErrorBody.from(SERVER_ERROR));
     }
 }
