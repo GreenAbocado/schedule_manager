@@ -1,12 +1,13 @@
 package com.greenabocado.schedulemanager.common;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 /* 공통 응답 표준화 */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@RequiredArgsConstructor
-public class ApiResponse<T> {
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@Getter
+public class ApiResponse<T>  {
     private final boolean success;
     private final T data;
     private final ErrorBody error;
