@@ -17,7 +17,12 @@ public class ErrorBody {
         this.message = message;
     }
 
-    public static ErrorBody by(ErrorCode error) {
+    public static ErrorBody from(ErrorCode error) {
         return new ErrorBody(error.getCode(), error.getMessage());
+    }
+
+    /* 직접 던진 예외 메시지 세분화 */
+    public static ErrorBody from(ErrorCode error, String message) {
+        return new ErrorBody(error.getCode(), message);
     }
 }
