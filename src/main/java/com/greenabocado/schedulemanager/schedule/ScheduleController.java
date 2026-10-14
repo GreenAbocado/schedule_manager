@@ -1,9 +1,7 @@
 package com.greenabocado.schedulemanager.schedule;
 
 import com.greenabocado.schedulemanager.common.ApiResponse;
-import com.greenabocado.schedulemanager.schedule.dto.ScheduleCreateRequest;
-import com.greenabocado.schedulemanager.schedule.dto.ScheduleResponse;
-import com.greenabocado.schedulemanager.schedule.dto.ScheduleUpdateRequest;
+import com.greenabocado.schedulemanager.schedule.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,5 +47,12 @@ public class ScheduleController {
         ScheduleResponse response = scheduleService.updateSchedule(id, requestDto);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(response));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteSchedule(
+            @PathVariable Long id, @RequestBody ScheduleDeleteRequest requestDto) {
+        scheduleService.deleteSchedule(id, requestDto);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

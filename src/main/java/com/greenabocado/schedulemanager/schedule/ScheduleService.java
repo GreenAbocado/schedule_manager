@@ -33,8 +33,7 @@ public class ScheduleService {
 
     @Transactional(readOnly = true)
     public ScheduleResponse getSchedule(Long id) {
-        Schedule schedule = scheduleRepository.findById(id)
-                .orElseThrow(()-> new CustomException(SCHEDULE_NOT_EXIST));
+        Schedule schedule = findById(id);
 
         log.debug("[일정 단건 조회] id:{}", id);
         return ScheduleResponse.from(schedule);
@@ -42,14 +41,26 @@ public class ScheduleService {
 
     @Transactional
     public ScheduleResponse updateSchedule(Long id, ScheduleUpdateRequest requestDto) {
-        Schedule schedule = scheduleRepository.findById(id)
-                .orElseThrow(()-> new CustomException(SCHEDULE_NOT_EXIST));
+        Schedule schedule = findById(id);
 
         verifyPassword(schedule, requestDto.password());
         schedule.updateInfo(requestDto.title(), requestDto.creator());
 
         log.info("[일정 변경] id:{}", id);
         return ScheduleResponse.from(schedule);
+    }
+
+    @Transactional
+    public void deleteSchedule(Long id, ScheduleDeleteRequest request) {
+        Schedule schedule = findById(id);
+        verifyPassword(schedule, request.password());
+        scheduleRepository.delete(schedule);
+        log.info("[일정 삭제] id:{}", id);
+    }
+
+    private Schedule findById(Long id) {
+        return scheduleRepository.findById(id)
+                .orElseThrow(()-> new CustomException(SCHEDULE_NOT_EXIST));
     }
 
     private void verifyPassword(Schedule schedule, String password) {
