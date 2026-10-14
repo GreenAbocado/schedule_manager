@@ -4,7 +4,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
@@ -14,12 +13,25 @@ import static com.greenabocado.schedulemanager.common.ErrorCode.*;
 @Slf4j
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler({ /* 스프링 자체 예외 */
-            MissingServletRequestParameterException.class,  // 필수 쿼리 누락
+    /* 요청 형식 예외 (스프링 기반) */
+    @ExceptionHandler({
+            // MissingServletRequestParameterException.class,  필수 쿼리 누락, 일정 조회 쿼리가 필수가 아니라 필요 없음
             MethodArgumentTypeMismatchException.class,  // 쿼리, 경로변수 타입 변환 실패
             HttpMessageNotReadableException.class,  // Json 형식 오류 및 타입 변환 실패
     })
     protected ResponseEntity<ApiResponse<Void>> handleInputException(Exception e, HttpServletRequest request) {
+
+        /* 역직렬화 중, 생성자 내 검증 예외가 HttpMessageNotReadableException으로 래핑되는 문제 해결 */
+        if (e instanceof HttpMessageNotReadableException) {
+            Throwable cause = e.getCause();
+            while (cause != null) {
+                if (cause instanceof IllegalArgumentException) {
+                    return handleIllegalArgumentException((IllegalArgumentException)cause, request);
+                }
+                cause = cause.getCause();
+            }
+        }
+
         log.warn("[400 Bad Request] | {} {} | by: {}",
                 request.getMethod(), request.getRequestURI(), e.getClass().getSimpleName());
 
@@ -27,7 +39,7 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.fail(ErrorBody.from(INVALID_INPUT)));
     }
 
-    /* 직접 던진 검증 예외 */
+    /* 유효성 검증 예외 (직접 던진 예외) */
     @ExceptionHandler(IllegalArgumentException.class)
     protected ResponseEntity<ApiResponse<Void>> handleIllegalArgumentException(IllegalArgumentException e, HttpServletRequest request) {
         log.warn("[400 Bad Request] | {} {} | message: {}",
@@ -37,6 +49,17 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.fail(ErrorBody.from(INVALID_INPUT, e.getMessage())));
     }
 
+    /* 비즈니스 예외 */
+    @ExceptionHandler(CustomException.class)
+    protected ResponseEntity<ApiResponse<Void>> handleCustomException(CustomException e, HttpServletRequest request) {
+        ErrorCode error = e.getError();
+        log.warn("[{} {}] | {} {} | code: {}", error.getStatus().value(), error.getStatus().getReasonPhrase(),
+                request.getMethod(), request.getRequestURI(), error.getCode());
+
+        return ResponseEntity.status(error.getStatus())
+                .body(ApiResponse.fail(ErrorBody.from(error)));
+    }
+
     @ExceptionHandler(NoResourceFoundException.class)
     protected ResponseEntity<ApiResponse<Void>> handleNoResourceFoundException(HttpServletRequest request) {
         log.warn("[404 Not Found] | {} {} | Url found fail",
@@ -44,16 +67,6 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(URL_NOT_FOUND.getStatus())
                 .body(ApiResponse.fail(ErrorBody.from(URL_NOT_FOUND)));
-    }
-
-    @ExceptionHandler(CustomException.class)
-    protected ResponseEntity<ApiResponse<Void>> handleCustomException(CustomException e, HttpServletRequest request) {
-        ErrorCode error = e.getError();
-        log.warn("[{} {}] | {} {} | message: {}", error.getStatus().value(), error.getStatus().getReasonPhrase(),
-                request.getMethod(), request.getRequestURI(), error.getMessage());
-
-        return ResponseEntity.status(error.getStatus())
-                .body(ApiResponse.fail(ErrorBody.from(error)));
     }
 
     /* 이후 클라이언트 예외 발견 시 추가 필요 */
