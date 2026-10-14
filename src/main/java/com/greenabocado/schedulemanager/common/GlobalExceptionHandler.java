@@ -4,7 +4,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
@@ -16,7 +15,7 @@ public class GlobalExceptionHandler {
 
     /* 요청 형식 예외 (스프링 기반) */
     @ExceptionHandler({
-            MissingServletRequestParameterException.class,  // 필수 쿼리 누락
+            // MissingServletRequestParameterException.class,  필수 쿼리 누락, 일정 조회 쿼리가 필수가 아니라 필요 없음
             MethodArgumentTypeMismatchException.class,  // 쿼리, 경로변수 타입 변환 실패
             HttpMessageNotReadableException.class,  // Json 형식 오류 및 타입 변환 실패
     })
@@ -55,7 +54,7 @@ public class GlobalExceptionHandler {
     protected ResponseEntity<ApiResponse<Void>> handleCustomException(CustomException e, HttpServletRequest request) {
         ErrorCode error = e.getError();
         log.warn("[{} {}] | {} {} | message: {}", error.getStatus().value(), error.getStatus().getReasonPhrase(),
-                request.getMethod(), request.getRequestURI(), error.getMessage());
+                request.getMethod(), request.getRequestURI(), error.getCode());
 
         return ResponseEntity.status(error.getStatus())
                 .body(ApiResponse.fail(ErrorBody.from(error)));

@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/schedules")
@@ -17,10 +18,26 @@ public class ScheduleController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<ScheduleResponse>> createSchedule(
-            @RequestBody ScheduleCreateRequest requestDto) {
+            @RequestBody ScheduleCreateRequest request) {
 
-        ScheduleResponse responseDto = scheduleService.createSchedule(requestDto);
+        ScheduleResponse response = scheduleService.createSchedule(request);
         return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(ApiResponse.success(responseDto));
+                    .body(ApiResponse.success(response));
+    }
+
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<ScheduleResponse>>> getSchedules(
+            @RequestParam(required=false) String creator) {
+
+        List<ScheduleResponse> response = scheduleService.getSchedules(creator);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.success(response));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<ScheduleResponse>> getSchedule(@PathVariable Long id) {
+        ScheduleResponse response = scheduleService.getSchedule(id);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.success(response));
     }
 }
