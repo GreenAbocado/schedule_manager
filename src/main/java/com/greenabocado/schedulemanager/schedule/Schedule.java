@@ -54,6 +54,14 @@ public class Schedule extends BaseEntity {
         this.password = password;
     }
 
+    public void updateInfo(String title, String creator) {
+        validateTitle(title);
+        validateCreator(creator);
+        this.title = title;
+        this.creator = creator;
+    }
+
+
     private static void validateTitle(String title) {
         if (title == null || title.isBlank()) {
             throw new IllegalArgumentException(INVALID_TITLE);

@@ -53,7 +53,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CustomException.class)
     protected ResponseEntity<ApiResponse<Void>> handleCustomException(CustomException e, HttpServletRequest request) {
         ErrorCode error = e.getError();
-        log.warn("[{} {}] | {} {} | message: {}", error.getStatus().value(), error.getStatus().getReasonPhrase(),
+        log.warn("[{} {}] | {} {} | code: {}", error.getStatus().value(), error.getStatus().getReasonPhrase(),
                 request.getMethod(), request.getRequestURI(), error.getCode());
 
         return ResponseEntity.status(error.getStatus())

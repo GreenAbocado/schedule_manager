@@ -1,14 +1,13 @@
 package com.greenabocado.schedulemanager.schedule;
 
 import com.greenabocado.schedulemanager.common.CustomException;
-import com.greenabocado.schedulemanager.schedule.dto.ScheduleCreateRequest;
-import com.greenabocado.schedulemanager.schedule.dto.ScheduleResponse;
+import com.greenabocado.schedulemanager.schedule.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
-import static com.greenabocado.schedulemanager.common.ErrorCode.SCHEDULE_NOT_EXIST;
+import static com.greenabocado.schedulemanager.common.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -17,8 +16,8 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
 
     @Transactional
-    public ScheduleResponse createSchedule(ScheduleCreateRequest dto) {
-        Schedule schedule = scheduleRepository.save(dto.toEntity());
+    public ScheduleResponse createSchedule(ScheduleCreateRequest requestDto) {
+        Schedule schedule = scheduleRepository.save(requestDto.toEntity());
         log.info("[일정 생성] id: {}", schedule.getId());
         return ScheduleResponse.from(schedule);
     }
@@ -39,5 +38,23 @@ public class ScheduleService {
 
         log.debug("[일정 단건 조회] id:{}", id);
         return ScheduleResponse.from(schedule);
+    }
+
+    @Transactional
+    public ScheduleResponse updateSchedule(Long id, ScheduleUpdateRequest requestDto) {
+        Schedule schedule = scheduleRepository.findById(id)
+                .orElseThrow(()-> new CustomException(SCHEDULE_NOT_EXIST));
+
+        verifyPassword(schedule, requestDto.password());
+        schedule.updateInfo(requestDto.title(), requestDto.creator());
+
+        log.info("[일정 변경] id:{}", id);
+        return ScheduleResponse.from(schedule);
+    }
+
+    private void verifyPassword(Schedule schedule, String password) {
+        if (!schedule.getPassword().equals(password)) {
+            throw new CustomException(SCHEDULE_AUTHENTICATION_FAIL);
+        }
     }
 }
