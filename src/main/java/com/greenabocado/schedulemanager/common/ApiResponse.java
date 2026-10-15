@@ -1,7 +1,7 @@
 package com.greenabocado.schedulemanager.common;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 /* 공통 응답 표준화 */
 @JsonInclude(JsonInclude.Include.NON_NULL)

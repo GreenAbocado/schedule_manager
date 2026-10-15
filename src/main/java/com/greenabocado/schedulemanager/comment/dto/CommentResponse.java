@@ -1,9 +1,9 @@
 package com.greenabocado.schedulemanager.comment.dto;
 
-import com.greenabocado.schedulemanager.comment.Comment;
 import lombok.Builder;
-
 import java.time.LocalDateTime;
+import com.greenabocado.schedulemanager.comment.Comment;
+
 
 @Builder
 public record CommentResponse(

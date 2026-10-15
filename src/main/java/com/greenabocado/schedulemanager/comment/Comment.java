@@ -1,9 +1,9 @@
 package com.greenabocado.schedulemanager.comment;
 
-import com.greenabocado.schedulemanager.common.BaseEntity;
-import jakarta.persistence.*;
 import lombok.*;
+import jakarta.persistence.*;
 import java.util.regex.Pattern;
+import com.greenabocado.schedulemanager.common.BaseEntity;
 import static com.greenabocado.schedulemanager.comment.CommentValidExceptionMessage.*;
 
 @Entity

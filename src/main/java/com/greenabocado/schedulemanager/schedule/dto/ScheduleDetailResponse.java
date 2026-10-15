@@ -1,13 +1,11 @@
 package com.greenabocado.schedulemanager.schedule.dto;
 
+import lombok.Builder;
+import java.time.LocalDateTime;
+import java.util.List;
 import com.greenabocado.schedulemanager.comment.Comment;
 import com.greenabocado.schedulemanager.comment.dto.CommentResponse;
 import com.greenabocado.schedulemanager.schedule.Schedule;
-import lombok.Builder;
-
-import java.time.LocalDateTime;
-import java.util.List;
-
 
 /* comment 패키지 의존 */
 @Builder

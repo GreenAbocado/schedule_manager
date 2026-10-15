@@ -1,12 +1,10 @@
 package com.greenabocado.schedulemanager.comment;
 
-import com.greenabocado.schedulemanager.comment.dto.CommentCreateRequest;
-import com.greenabocado.schedulemanager.comment.dto.CommentResponse;
-import com.greenabocado.schedulemanager.common.ApiResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import com.greenabocado.schedulemanager.comment.dto.*;
+import com.greenabocado.schedulemanager.common.ApiResponse;
 
 @RestController
 @RequiredArgsConstructor

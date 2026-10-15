@@ -16,6 +16,9 @@ public record ScheduleCreateRequest(String title, String content, String creator
         if (password == null || password.isBlank()) {
             throw new IllegalArgumentException(INVALID_PASSWORD);
         }
+        if (content == null || content.isBlank()) {
+            throw new IllegalArgumentException(INVALID_CONTENT);
+        }
         title = title.trim();
         creator = creator.trim();
     }

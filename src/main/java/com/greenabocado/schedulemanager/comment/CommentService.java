@@ -1,13 +1,12 @@
 package com.greenabocado.schedulemanager.comment;
 
-import com.greenabocado.schedulemanager.comment.dto.CommentCreateRequest;
-import com.greenabocado.schedulemanager.comment.dto.CommentResponse;
-import com.greenabocado.schedulemanager.common.CustomException;
-import com.greenabocado.schedulemanager.schedule.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.greenabocado.schedulemanager.comment.dto.*;
+import com.greenabocado.schedulemanager.common.CustomException;
+import com.greenabocado.schedulemanager.schedule.ScheduleRepository;
 import static com.greenabocado.schedulemanager.common.ErrorCode.*;
 
 @Service
