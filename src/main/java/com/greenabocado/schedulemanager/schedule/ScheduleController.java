@@ -1,12 +1,11 @@
 package com.greenabocado.schedulemanager.schedule;
 
-import com.greenabocado.schedulemanager.common.ApiResponse;
-import com.greenabocado.schedulemanager.schedule.dto.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import com.greenabocado.schedulemanager.common.ApiResponse;
+import com.greenabocado.schedulemanager.schedule.dto.*;
 
 @RestController
 @RequestMapping("/schedules")

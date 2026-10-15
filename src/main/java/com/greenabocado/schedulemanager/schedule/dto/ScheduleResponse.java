@@ -1,7 +1,8 @@
 package com.greenabocado.schedulemanager.schedule.dto;
-import com.greenabocado.schedulemanager.schedule.Schedule;
+
 import lombok.Builder;
 import java.time.LocalDateTime;
+import com.greenabocado.schedulemanager.schedule.Schedule;
 
 @Builder
 public record ScheduleResponse(Long id, String title, String content, String creator,

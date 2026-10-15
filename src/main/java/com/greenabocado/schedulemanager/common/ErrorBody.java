@@ -1,7 +1,6 @@
 package com.greenabocado.schedulemanager.common;
 
 import lombok.Getter;
-
 import java.time.LocalDateTime;
 
 /* 에러 응답 바디 객체 */
