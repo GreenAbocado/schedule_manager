@@ -13,8 +13,10 @@ public enum ErrorCode {
 
     /* 일정 관련 */
     SCHEDULE_NOT_EXIST(HttpStatus.NOT_FOUND, "SCHEDULE_NOT_EXIST", "해당 일정이 존재하지 않습니다."),
-    SCHEDULE_AUTHENTICATION_FAIL(HttpStatus.UNAUTHORIZED, "SCHEDULE_AUTHENTICATION_FAIL", "일정 변경 비밀번호 인증에 실패하였습니다.");
+    SCHEDULE_AUTHENTICATION_FAIL(HttpStatus.UNAUTHORIZED, "SCHEDULE_AUTHENTICATION_FAIL", "일정 변경 비밀번호 인증에 실패하였습니다."),
 
+    /* 댓글 관련 */
+    COMMENT_OVER_LIMIT(HttpStatus.BAD_REQUEST, "COMMENT_OVER_LIMIT", "댓글 개수 제한을 초과하였습니다.");
 
     ErrorCode(HttpStatus status, String code, String message) {
         this.status = status;

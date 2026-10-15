@@ -34,8 +34,8 @@ public class ScheduleController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<ScheduleResponse>> getSchedule(@PathVariable Long id) {
-        ScheduleResponse response = scheduleService.getSchedule(id);
+    public ResponseEntity<ApiResponse<ScheduleDetailResponse>> getSchedule(@PathVariable Long id) {
+        ScheduleDetailResponse response = scheduleService.getSchedule(id);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(response));
     }

@@ -1,5 +1,7 @@
 package com.greenabocado.schedulemanager.schedule;
 
+import com.greenabocado.schedulemanager.comment.Comment;
+import com.greenabocado.schedulemanager.comment.CommentRepository;
 import com.greenabocado.schedulemanager.common.CustomException;
 import com.greenabocado.schedulemanager.schedule.dto.*;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,8 @@ import static com.greenabocado.schedulemanager.common.ErrorCode.*;
 @Slf4j
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
+    /* 도메인 패키지 간의 순환 참조 발생 */
+    private final CommentRepository commentRepository;
 
     @Transactional
     public ScheduleResponse createSchedule(ScheduleCreateRequest requestDto) {
@@ -32,11 +36,13 @@ public class ScheduleService {
     }
 
     @Transactional(readOnly = true)
-    public ScheduleResponse getSchedule(Long id) {
+    public ScheduleDetailResponse getSchedule(Long id) {
         Schedule schedule = findById(id);
 
-        log.debug("[일정 단건 조회] id:{}", id);
-        return ScheduleResponse.from(schedule);
+        /* comment 직접 의존 */
+        List<Comment> comments = commentRepository.findAllByScheduleId(id);
+        log.debug("[일정(+댓글) 단건 조회] id:{}", id);
+        return ScheduleDetailResponse.from(schedule, comments);
     }
 
     @Transactional
@@ -54,6 +60,8 @@ public class ScheduleService {
     public void deleteSchedule(Long id, ScheduleDeleteRequest request) {
         Schedule schedule = findById(id);
         verifyPassword(schedule, request.password());
+        /* comment에 대한 삭제 결정 책임 */
+        commentRepository.deleteAllByScheduleId(id);
         scheduleRepository.delete(schedule);
         log.info("[일정 삭제] id:{}", id);
     }
