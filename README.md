@@ -1,8 +1,6 @@
 # 일정 관리 프로그램 📆
 ___
 스프링 부트 + JPA 기반 일정 관리 프로그램입니다.
-### 🔗 [API 명세](https://documenter.getpostman.com/view/53779985/2sBYHRUM5A)
-ERD 추가 필요
 
 ## 💻 프로젝트 소개
 ___
@@ -21,3 +19,13 @@ ___
 **Tools**
 
 ![Tools](https://skillicons.dev/icons?i=git,github,idea,postman)
+
+
+## 📄 API 명세 및 ERD
+___
+### 🔗 [API 명세](https://documenter.getpostman.com/view/53779985/2sBYHRUM5A)
+
+<br>
+
+### ERD
+![ERD](/img/ERD.png)
