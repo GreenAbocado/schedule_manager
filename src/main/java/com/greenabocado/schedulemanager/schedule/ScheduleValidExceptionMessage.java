@@ -1,7 +1,6 @@
 package com.greenabocado.schedulemanager.schedule;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ScheduleValidExceptionMessage {
@@ -12,6 +11,7 @@ public class ScheduleValidExceptionMessage {
     public static final String INVALID_TITLE = "필수 입력 값인 title을 입력해야 합니다.";
     public static final String INVALID_CREATOR = "필수 입력 값인 creator를 입력해야 합니다.";
     public static final String INVALID_PASSWORD = "필수 입력 값인 password를 입력해야 합니다.";
+    public static final String INVALID_CONTENT = "필수 입력 값인 content를 입력해야 합니다.";
 
     /* 필드 형식 검증 예외 */
     public static final String INVALID_TITLE_FORMAT = "title은 %d자 이하로 입력해야 합니다.";

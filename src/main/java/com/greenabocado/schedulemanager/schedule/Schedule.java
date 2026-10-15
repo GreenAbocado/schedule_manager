@@ -1,9 +1,9 @@
 package com.greenabocado.schedulemanager.schedule;
 
-import com.greenabocado.schedulemanager.common.BaseEntity;
-import jakarta.persistence.*;
 import lombok.*;
+import jakarta.persistence.*;
 import java.util.regex.Pattern;
+import com.greenabocado.schedulemanager.common.BaseEntity;
 import static com.greenabocado.schedulemanager.schedule.ScheduleValidExceptionMessage.*;
 
 @Entity
@@ -12,32 +12,33 @@ import static com.greenabocado.schedulemanager.schedule.ScheduleValidExceptionMe
 public class Schedule extends BaseEntity {
 
     /* 도메인 필드 검증 조건 */
-    /* title, creator, password 최대 길이. 특정 길이 변경 시 분리 */
-    private static final int GENERAL_MAX_LENGTH = 20;
-    private static final int CONTENT_MAX_LENGTH = 100;
+    /* creator, password 최대 길이. 특정 길이 변경 시 분리 */
+    private static final int INFO_MAX_LENGTH = 20;
+    private static final int TITLE_MAX_LENGTH = 30;
+    private static final int CONTENT_MAX_LENGTH = 200;
     private static final int CREATOR_MIN_LENGTH = 1;
     private static final int PASSWORD_MIN_LENGTH = 4;
     private static final Pattern CREATOR_PATTERN = Pattern.compile(
-            String.format("[a-zA-Z가-힣]{%d,%d}", CREATOR_MIN_LENGTH, GENERAL_MAX_LENGTH));
+            String.format("[a-zA-Z가-힣]{%d,%d}", CREATOR_MIN_LENGTH, INFO_MAX_LENGTH));
     /* 비번 원문 그대로 저장 */
     private static final Pattern PASSWORD_PATTERN = Pattern.compile(
-            String.format("[a-zA-Z0-9]{%d,%d}", PASSWORD_MIN_LENGTH, GENERAL_MAX_LENGTH));
+            String.format("[a-zA-Z0-9]{%d,%d}", PASSWORD_MIN_LENGTH, INFO_MAX_LENGTH));
 
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length=GENERAL_MAX_LENGTH, nullable=false)
+    @Column(length=TITLE_MAX_LENGTH, nullable=false)
     private String title;
 
-    @Column(length=CONTENT_MAX_LENGTH, updatable=false)
-    private String content; // null 및 공백 가능
+    @Column(length=CONTENT_MAX_LENGTH, nullable=false, updatable=false)
+    private String content;
 
-    @Column(length=GENERAL_MAX_LENGTH, nullable=false)
+    @Column(length=INFO_MAX_LENGTH, nullable=false)
     private String creator;
 
-    @Column(length=GENERAL_MAX_LENGTH, nullable=false, updatable=false)
+    @Column(length=INFO_MAX_LENGTH, nullable=false, updatable=false)
     private String password;
 
 
@@ -66,13 +67,17 @@ public class Schedule extends BaseEntity {
         if (title == null || title.isBlank()) {
             throw new IllegalArgumentException(INVALID_TITLE);
         }
-        if (title.length() > GENERAL_MAX_LENGTH) {
-            throw new IllegalArgumentException(String.format(INVALID_TITLE_FORMAT, GENERAL_MAX_LENGTH));
+        if (title.length() > TITLE_MAX_LENGTH) {
+            throw new IllegalArgumentException(String.format(INVALID_TITLE_FORMAT, TITLE_MAX_LENGTH));
         }
     }
 
     private static void validateContent(String content) {
-        if (content != null && content.length() > CONTENT_MAX_LENGTH) {
+        if (content == null || content.isBlank()) {
+            throw new IllegalArgumentException(INVALID_CONTENT);
+        }
+
+        if (content.length() > CONTENT_MAX_LENGTH) {
             throw new IllegalArgumentException(String.format(INVALID_CONTENT_FORMAT, CONTENT_MAX_LENGTH));
         }
     }
@@ -82,7 +87,7 @@ public class Schedule extends BaseEntity {
             throw new IllegalArgumentException(INVALID_CREATOR);
         }
         if (!CREATOR_PATTERN.matcher(creator).matches()) {
-            throw new IllegalArgumentException(String.format(INVALID_CREATOR_FORMAT, CREATOR_MIN_LENGTH, GENERAL_MAX_LENGTH));
+            throw new IllegalArgumentException(String.format(INVALID_CREATOR_FORMAT, CREATOR_MIN_LENGTH, INFO_MAX_LENGTH));
         }
     }
 
@@ -91,7 +96,7 @@ public class Schedule extends BaseEntity {
             throw new IllegalArgumentException(INVALID_PASSWORD);
         }
         if (!PASSWORD_PATTERN.matcher(password).matches()) {
-            throw new IllegalArgumentException(String.format(INVALID_PASSWORD_FORMAT, PASSWORD_MIN_LENGTH, GENERAL_MAX_LENGTH));
+            throw new IllegalArgumentException(String.format(INVALID_PASSWORD_FORMAT, PASSWORD_MIN_LENGTH, INFO_MAX_LENGTH));
         }
     }
 }
